@@ -1,0 +1,39 @@
+pip install pandas scikit-learn numpy
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+data = {
+    'Move1': [0, 1, 2, 0, 1, 2, 0, 1, 2],  # Rock=0, Paper=1, Scissors=2
+    'Move2': [1, 2, 0, 1, 2, 0, 1, 2, 0],
+    'Move3': [2, 0, 1, 2, 0, 1, 2, 0, 1],
+    'NextMove': [0, 1, 2, 0, 1, 2, 0, 1, 2]
+}
+df=pd.DataFrame(data)
+df
+
+df.to_csv('rps_data.csv', index=False)
+
+print(df.head())
+
+X = df[['Move1', 'Move2', 'Move3']]
+
+y = df['NextMove']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train , y_train)
+
+y_pred = knn.predict(X_test)
+print("Predicted Moves:", y_pred)
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+new_moves = np.array([[1, 2, 0]])
+predicted_move = knn.predict(new_moves)
+print("Predicted Next Move:", predicted_move)
